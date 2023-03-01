@@ -49,6 +49,8 @@ elif init_from.startswith('gpt2'):
     model = GPT.from_pretrained(init_from, dict(dropout=0.0))
 
 model.eval()
+model = torch.jit.freeze(torch.jit.script(model), preserved_attrs=["generate"])
+
 model.to(device)
 if compile:
     model = torch.compile(model) # requires PyTorch 2.0 (optional)
